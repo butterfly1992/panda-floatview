@@ -1,0 +1,6 @@
+/fv/
+/jdbc.properties
+/log4j.properties
+/spring-common-config.xml
+/spring-mybatis-config.xml
+/tinyipdata_utf8.dat

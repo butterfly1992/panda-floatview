@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fv.adv.mapper.OperMapper">
+	<insert id="recordaddUser" parameterType="Param" >
+		INSERT INTO
+		fv_ori_actuser(imei,imsi,appid,TIME,gysdkv,times) VALUES
+		(#{imei},#{imsi},#{appid},#{time},#{gysdkv},1);
+	</insert>
+	<update id="recordupdUser" parameterType="Param">
+		UPDATE fv_ori_actuser
+		SET times=times+1 WHERE
+		imei=#{imei} and imsi=#{imsi} and
+		appid=#{appid} and time=#{time} and
+		gysdkv=#{gysdkv}
+	</update>
+	<update id="updateNooverIndex" parameterType="Req" >
+		UPDATE fv_ori_req
+		<set>
+			<if test="clickindex !=null">CLICKINDEX=#{clickindex},</if>
+			<if test="downindex !=null">DOWNINDEX=#{downindex},</if>
+			<if test="setupindex !=null">SETUPINDEX=#{setupindex},</if>
+		</set>
+		WHERE imei=#{imei} and imsi=#{imsi} and time=#{time}
+	</update>
+	<update id="updateOper" parameterType="Param">
+		UPDATE fv_ori_oper
+		<set>
+			<if test="oper==1">CLICK=CLICK+1,</if>
+			<if test="oper==2">DOWNLOAD=DOWNLOAD+1,</if>
+			<if test="oper==3">SETUP=SETUP+1,</if>
+		</set>
+		WHERE APPID=#{appid}  and SOFTID=#{sid} and time=#{time} and gysdkv=#{gysdkv}
+	</update>
+	<insert id="insertOper" parameterType="Param">
+		INSERT INTO
+		fv_ori_oper(APPID,SOFTID,CLICK,DOWNLOAD,setup,TIME,gysdkv)
+		VALUES
+		(#{appid},#{sid},
+		<if test="oper==1">1,0,</if>
+		<if test="oper==2">0,1,</if>
+		0,#{time},#{gysdkv});
+	</insert>
+</mapper>

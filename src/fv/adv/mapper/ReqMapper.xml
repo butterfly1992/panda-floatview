@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fv.adv.mapper.ReqMapper">
+	<resultMap type="Soft" id="SoftResult">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="apkurl" column="apk" />
+		<result property="wareindex" column="wareindex" />
+		<result property="pck" column="pck" />
+		<result property="icon" column="icon" />
+		<result property="code" column="fvcode" />
+	</resultMap>
+	<select id="getTestResult" resultMap="SoftResult">
+		SELECT
+		id,NAME,apk,wareindex,pck,icon,fvcode FROM
+		zy_soft WHERE fvstatus=2 AND
+		wareindex IS NOT
+		NULL AND fvcode IS NOT NULL ORDER BY
+		fvcode DESC LIMIT
+		0,4
+	</select>
+	<select id="getResult" resultMap="SoftResult">
+		SELECT id,name,apk,wareindex,pck,icon,fvcode FROM
+		zy_soft
+		WHERE
+		fvcode>#{code} and fvstatus=2
+		<if test="operation !=0">
+			and
+			FIND_IN_SET(#{operation},operation)
+			and (
+			<if test="operation==1">YDputtype </if>
+			<if test="operation==2">LTputtype </if>
+			<if test="operation==3">DXputtype </if>
+			=0
+			OR (!LOCATE(#{area},
+			<if test="operation==1">YDprovince </if>
+			<if test="operation==2">LTprovince </if>
+			<if test="operation==3">DXprovince </if>
+			)))
+		</if>
+		order by
+		fvcode limit 0,#{limit}
+	</select>
+</mapper>
